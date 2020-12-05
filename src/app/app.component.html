@@ -1,0 +1,30 @@
+<div class="alert alert-primary app-title">
+  <p class="col-md-12">Budget Application</p>
+  <div class="row" *ngIf="Token != null && Token != ''">
+    <a class="alert alert-light ml-3 col-md-1 mt-3" href="/home">Home</a>
+    <a class="alert alert-light ml-3 col-md-1 mt-3" href="/budget">Budget</a>
+    <a class="alert alert-light ml-3 col-md-1 mt-3" href="javascript:void(0)" (click)="Logout()">log out</a>
+  </div>
+</div>
+<router-outlet></router-outlet>
+<div bsModal #childModal="bs-modal" class="modal fade" [config]="{ backdrop: 'static' }" tabindex="-1"
+     role="dialog" aria-labelledby="dialog-child-name" aria-hidden="true" id="myModal">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-child-name" class="modal-title pull-left">You Have Been Idle!</h4>
+      </div>
+      <div class="modal-body">
+         {{idleState}}
+        <div class="row mrgbtm mt-3">
+          <div class="col-md-6" *ngIf="!timedOut">
+            <button type="button" (click)="refreshToken()" class="btn btn-success">Refresh Token</button>
+          </div>
+          <div class="col-md-6" *ngIf="timedOut">
+              <button type="button" (click)="Logout()" class="btn btn-primary">Go to Login</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

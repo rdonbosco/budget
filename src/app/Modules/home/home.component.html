@@ -1,0 +1,117 @@
+
+    <div class="col-md-12 table-h">
+        <table class="table table-sm" id="tblbudget" *ngIf="BudgetList.length>0">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Budget Type</th>
+                <th>Month</th>
+                <th>Year</th>
+                <th>Allocation</th>
+                <th>Spent</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let Budget of BudgetList;index as i;">
+                <td>{{ i + 1 }}</td>
+                <td>{{ Budget.type }}</td>
+                <td>{{ Budget.month }}</td>
+                <td>{{ Budget.year }}</td>
+                <td>{{ Budget.allocation }}</td>
+                <td><span *ngIf="Budget.spent > Budget.allocation" class="spent-color">{{ Budget.spent }}</span><span *ngIf="Budget.allocation >= Budget.spent">{{ Budget.spent }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+    <p class="ml-3 mt-3"><b>Chart Filters</b></p>
+    <hr>
+    <div class="row col-md-12 mb-3">
+        <select class="form-control col-md-2 ml-3" [(ngModel)]="SelectMonth">
+            <option value=''>--Select Month--</option>
+            <option value='1'>Janaury</option>
+            <option value='2'>February</option>
+            <option value='3'>March</option>
+            <option value='4'>April</option>
+            <option value='5'>May</option>
+            <option value='6'>June</option>
+            <option value='7'>July</option>
+            <option value='8'>August</option>
+            <option value='9'>September</option>
+            <option value='10'>October</option>
+            <option value='11'>November</option>
+            <option value='12'>December</option>
+        </select> 
+        <select class="form-control col-md-2 ml-3" [(ngModel)]="SelectYear">
+            <option value=''>--Select Year--</option>
+            <option value='2015'>2015</option>
+            <option value='2016'>2016</option>
+            <option value='2017'>2017</option>
+            <option value='2018'>2018</option>
+            <option value='2019'>2019</option>
+            <option value='2020'>2020</option>
+        </select> 
+        <button class="btn btn-secondary ml-3" (click)="getfilter()">search</button>
+    </div>
+    <hr>
+    <p class="ml-3"><b>Pie charts</b></p>
+    <hr>
+    <div class="row col-md-12">        
+        <div class="col-md-6">
+            <p class="ml-5"><b>Allocation wise</b></p>
+            <div class="chartjs-container">
+                <canvas 
+                    baseChart 
+                    [data]="pieChartAllocationData" 
+                    [labels]="pieChartAllocationLabels" 
+                    [chartType]="pieChartType"
+                    [colors]="pieChartColors"
+                    (chartHover)="chartAllocationHovered($event)"
+                    [options]="pieChartOptions"  >
+                </canvas>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <p class="ml-5"><b>Spent wise</b></p>
+            <div class="chartjs-container">
+                <canvas 
+                    baseChart 
+                    [data]="pieChartSpentData" 
+                    [labels]="pieChartSpentLabels" 
+                    [chartType]="pieChartType"
+                    [colors]="pieChartColors"
+                    (chartHover)="chartSpentHovered($event)"
+                    [options]="pieChartOptions" >
+                </canvas>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <p class="ml-3"><b>Doughnut charts</b></p>
+    <hr>
+    <div class="row col-md-12">        
+        <div class="col-md-6">
+            <p class="ml-5"><b>Allocation wise</b></p>
+            <div style="display: block">
+                <canvas baseChart
+                            [data]="doughnutAllocationChartData"
+                            [labels]="doughnutChartLabels"
+                            [chartType]="doughnutChartType"
+                            [colors]="doughnutChartColors"
+                            (chartHover)="DoughnutchartAllocationHovered($event)"
+                            [options]="doughnutChartOptions"></canvas>
+              </div>
+        </div>
+        <div class="col-md-6">
+            <p class="ml-5"><b>Spent wise</b></p>
+            <div style="display: block">
+                <canvas baseChart
+                            [data]="doughnutSpentChartData"
+                            [labels]="doughnutChartLabels"
+                            [chartType]="doughnutChartType"
+                            [colors]="doughnutChartColors"
+                            (chartHover)="DoughnutchartSpentHovered($event)"
+                            [options]="doughnutChartOptions"></canvas>
+              </div>
+        </div>
+    </div>
+    
