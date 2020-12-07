@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Label } from 'ng2-charts';
-import { ChartOptions, ChartType } from 'chart.js';
+import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { BudgetService } from 'src/app/Services/http/budget.service';
 
 @Component({
@@ -22,15 +22,15 @@ export class HomeComponent implements OnInit {
   constructor(private budgetService: BudgetService) { }
 
   // Pie start
-  public pieChartAllocationLabels: Label[] = [];
-  public pieChartSpentLabels: Label[] = [];
-  public pieChartAllocationToolTipLabels: Label[] = [];
-  public pieChartSpentToolTipLabels: Label[] = [];
-  public pieChartAllocationData: number[] = [];
-  public pieChartSpentData: number[] = [];
-  public pieChartType: ChartType = 'pie';
+  public pieChartAllocationLabels = [];
+  public pieChartSpentLabels = [];
+  public pieChartAllocationToolTipLabels = [];
+  public pieChartSpentToolTipLabels = [];
+  public pieChartAllocationData = [];
+  public pieChartSpentData = [];
+  public pieChartType = 'pie';
   public pieChartColors = [];
-  public pieChartOptions: ChartOptions = {
+  public pieChartOptions = {
     responsive: true,
     legend: {
       position: 'top',
@@ -48,14 +48,14 @@ export class HomeComponent implements OnInit {
   // Pie end
 
    // Doughnut start
-   public doughnutChartLabels: string[] = [];
-   public doughnutChartAllocationToolTipLabels: Label[] = [];
-   public doughnutChartSpentToolTipLabels: Label[] = [];
-   public doughnutAllocationChartData: number[] = [];
-   public doughnutSpentChartData: number[] = [];
+   public doughnutChartLabels = [];
+   public doughnutChartAllocationToolTipLabels = [];
+   public doughnutChartSpentToolTipLabels = [];
+   public doughnutAllocationChartData = [];
+   public doughnutSpentChartData = [];
    public doughnutChartType = 'doughnut';
    public doughnutChartColors = [];
-   public doughnutChartOptions: ChartOptions = {
+   public doughnutChartOptions = {
     responsive: true,
     legend: {
       position: 'top',
@@ -71,6 +71,45 @@ export class HomeComponent implements OnInit {
     },
   };
    // Doughnut end
+
+  // BarChart start
+  public barChartOptions = {
+    responsive: true,
+    scales: { xAxes: [{}], yAxes: [{ticks: { beginAtZero: true }}] },
+  };
+  public barChartLabels = [];
+  public barChartType = 'bar';
+  public barChartLegend = true;
+  public barChartPlugins = [];
+  public barchartAllocationData = [];
+  public barchartSpentData = []; 
+  public barChartData = [];
+  // BarChart end
+
+  // LineChart start
+  public linechartAllocationData = [];
+  public linechartSpentData = [];
+  public lineChartData = [];
+  public lineChartLabels = [];
+  public lineChartOptions = {
+    responsive: true,
+    scales: { xAxes: [{}], yAxes: [{ticks: { beginAtZero: true }}] },
+  };
+  public lineChartColors = [
+
+    {
+      backgroundColor: 'rgba(77,83,96,0.2)',
+      borderColor: 'rgba(77,83,96,1)',
+    },
+    {
+      backgroundColor: 'rgba(255,0,0,0.3)',
+      borderColor: 'red',
+    }
+  ];
+  public lineChartLegend = true;
+  public lineChartType = 'line';
+  public lineChartPlugins = [];
+  // LineChart end
 
   ngOnInit(): void {
     this.get();
@@ -109,22 +148,31 @@ export class HomeComponent implements OnInit {
     this.budgetService.GetBudgetFilter(param)
     .subscribe(
         (data: any) => {
-          let BudgetList = data['data'];
+          const BudgetList = data['data'];
           const self = this;
-          let ColorCodes = [];
-          let ColorCodes1 = [];
+          const ColorCodes = [];
+          const ColorCodes1 = [];
           self.pieChartAllocationData = [];
           self.pieChartAllocationToolTipLabels = [];
           self.pieChartSpentToolTipLabels = [];
           self.pieChartAllocationLabels = [];
           self.pieChartSpentLabels = [];
           self.pieChartSpentData = [];
+
           self.doughnutAllocationChartData = [];
           self.doughnutChartLabels = [];
           self.doughnutChartLabels = [];
           self.doughnutChartAllocationToolTipLabels = [];
           self.doughnutChartSpentToolTipLabels = [];
           self.doughnutSpentChartData = [];
+
+          self.barChartLabels = [];
+          self.barchartAllocationData = [];
+          self.barchartSpentData = [];
+
+          self.linechartAllocationData = [];
+          self.linechartSpentData = [];
+          self.lineChartLabels = [];
           BudgetList.filter(function (x) {
             self.pieChartAllocationData.push(x.allocation);
             x.month = self.month[x.month - 1].trim();
@@ -140,6 +188,14 @@ export class HomeComponent implements OnInit {
             self.doughnutChartAllocationToolTipLabels.push(' allocation of ' + x.month + ' ' + x.year);
             self.doughnutChartSpentToolTipLabels.push(' spent of ' + x.month + ' ' + x.year);
 
+            self.barChartLabels.push(x.type);
+            self.barchartAllocationData.push(x.allocation);
+            self.barchartSpentData.push(x.spent);
+
+            self.linechartAllocationData.push(x.allocation);
+            self.linechartSpentData.push(x.spent);
+            self.lineChartLabels.push(x.type);
+
             ColorCodes.push(self.getRandomColor());
             ColorCodes1.push(self.getRandomColor());
           });
@@ -153,25 +209,32 @@ export class HomeComponent implements OnInit {
               backgroundColor: ColorCodes1,
             },
           ];
-
+          self.barChartData = [
+            { data: this.barchartAllocationData, label: 'Allocation' },
+            { data: this.barchartSpentData, label: 'Spent' }
+          ];
+          self.lineChartData = [
+            { data: this.linechartAllocationData, label: 'Allocation' },
+            { data: this.linechartSpentData, label: 'Spent' }
+          ];
         },
         error => {
         });
   }
 
-  chartAllocationHovered(e:any):void {
+  chartAllocationHovered(e: any): void {
     localStorage.setItem('PieHover', e.active[0]._model.label + this.pieChartAllocationToolTipLabels[e.active[0]._index]);
   }
 
-  chartSpentHovered(e:any):void {
+  chartSpentHovered(e: any): void {
     localStorage.setItem('PieHover', e.active[0]._model.label + this.pieChartSpentToolTipLabels[e.active[0]._index]);
   }
 
-  DoughnutchartAllocationHovered(e:any):void {
+  DoughnutchartAllocationHovered(e: any): void {
     localStorage.setItem('DoughnutHover', e.active[0]._model.label + this.doughnutChartAllocationToolTipLabels[e.active[0]._index]);
   }
 
-  DoughnutchartSpentHovered(e:any):void {
+  DoughnutchartSpentHovered(e: any): void {
     localStorage.setItem('DoughnutHover', e.active[0]._model.label + this.doughnutChartSpentToolTipLabels[e.active[0]._index]);
   }
 
