@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Label } from 'ng2-charts';
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { BudgetService } from 'src/app/Services/http/budget.service';
+import { LocalStorage } from '@ng-idle/core';
 
 @Component({
   selector: 'app-home',
@@ -19,7 +20,13 @@ export class HomeComponent implements OnInit {
   public SelectMonth = this.today.getMonth() + 1;
   public SelectYear = this.today.getFullYear();
 
-  constructor(private budgetService: BudgetService) { }
+  constructor(private budgetService: BudgetService) {
+    let PreLogin = localStorage.getItem("PreLogin");
+    if(PreLogin === "PreLogin"){
+      localStorage.removeItem("PreLogin");
+      location.reload();
+    }
+  }
 
   // Pie start
   public pieChartAllocationLabels = [];

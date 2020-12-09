@@ -5,7 +5,7 @@
             <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                 <div class="form-group">
                     <label for="username">User Name</label>
-                    <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': (loginForm.controls['username'].touched && loginForm.controls['username'].invalid) }" />
+                    <input type="text" formControlName="username" name="username" class="form-control" [ngClass]="{ 'is-invalid': (loginForm.controls['username'].touched && loginForm.controls['username'].invalid) }" />
                     <div *ngIf="(loginForm.controls['username'].touched || loginForm.controls['username'].dirty) && loginForm.controls['username'].errors?.required" class="invalid-feedback">
                         User Name is required
                     </div>
@@ -15,12 +15,12 @@
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': (loginForm.controls['password'].touched && loginForm.controls['password'].invalid) }" />
+                    <input type="password" formControlName="password" name="password" class="form-control" [ngClass]="{ 'is-invalid': (loginForm.controls['password'].touched && loginForm.controls['password'].invalid) }" />
                     <div *ngIf="loginForm.controls['password'].touched || loginForm.controls['password'].dirty" class="invalid-feedback">
                         Password is required
                     </div>
                 </div>
-                <button [disabled]="!loginForm.valid" class="btn btn-primary">
+                <button [disabled]="!loginForm.valid" class="btn btn-primary" aria-label='Login'>
                     <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                     Login
                 </button> &nbsp;&nbsp;

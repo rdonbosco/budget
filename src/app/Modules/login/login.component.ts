@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from '../../Services/http/login.service';
@@ -18,8 +18,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
       private formBuilder: FormBuilder,
-      private router: Router,
-      private loginService: LoginService
+      public router: Router,
+      private loginService: LoginService,
   ) { 
     var accessToken = localStorage.getItem('token');
     if (accessToken != null && accessToken != "") {
@@ -55,7 +55,8 @@ export class LoginComponent implements OnInit {
               if(data['statusCode'] == 200){
                 localStorage.setItem("UserData", JSON.stringify(data['data']));
                 localStorage.setItem("token", data['token']);
-                location.reload();
+                localStorage.setItem("PreLogin", "PreLogin");
+                this.router.navigate(['/home']);
               }
               else{
                 this.error = data['message'];
